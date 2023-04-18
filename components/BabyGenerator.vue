@@ -1,11 +1,55 @@
-<script setup>
-import { reactive } from 'vue';
+<script setup lang="ts">
+import { reactive, ref } from 'vue';
+import { members } from '../data'
+
+    // const enum gender {
+    //     Boy = "Boy",
+    //     Girl = "Girl",
+    //     lgbtqiPlus ='lgbtq+'
+    // }
+
+    // const enum popularity {
+    //     Boy = "Boy",
+    //     Girl = "Girl",
+    //     lgbtqiPlus ='lgbtq+'
+    // }
+
+    // const enum length {
+    //     SHORT = "Boy",
+    //     LONG = "LONG",
+    //     ALL ='ALL'
+    // }
+
+    // interface OptionState{
+    //     gender: gender,
+    //     popularity:popularity,
+    //     length: length
+    // }
+
+    // const obj: OptionState = {
+    //     gender: gender.Girl,
+    //     length: length.ALL,
+    //     popularity: popularity.Girl,
+    // }
 
     const option = reactive({
-        gender: "lgbtq+",
-        popularity: "Unique",
+        gender: "Male",
+        status: "Dead",
         length: "Long"
     })
+
+    const computedSelectChracter = () => {
+        return members
+            .filter( item => item.status === option.status)
+            .filter( item => item.gender === option.gender)
+    }
+
+    const show = ref(false)
+
+    const showResult = () => {
+        show.value = true
+    }
+
 </script>
 
 
@@ -17,33 +61,58 @@ import { reactive } from 'vue';
       <div class="option">
         <h2>Choose a gender</h2>
         <div class="options-buttons">
-          <button :class="option.gender === 'boy' && 'active'">boy</button>
-          <button :class="option.gender === 'lgbtq+' && 'active'">lgbtq+</button>
-          <button :class="option.gender === 'girl' && 'active'">girl</button>
+          <button :class="option.gender === 'Male' && 'active'" @click="option.gender = 'Male'">Male</button>
+          <button :class="option.gender === 'lgbtq+' && 'active'" @click="option.gender = 'lgbtq+'">lgbtq+</button>
+          <button :class="option.gender === 'Female' && 'active'" @click="option.gender = 'Female'">Female</button>
         </div>
       </div>
       <div class="option">
         <h2>Choose the name's popularity</h2>
         <div class="options-buttons">
-          <button>Marcos</button>
-          <button>Joel</button>
-          <button>Jose</button>
+          <button :class="option.status === 'Alive' && 'active'" @click="option.status = 'Alive'">Alive</button>
+          <button :class="option.status === 'Dead' && 'active'" @click="option.status = 'Dead'">Dead</button>
         </div>
       </div>
       <div class="option">
         <h2>Choose the name's length</h2>
         <div class="options-buttons">
-          <button :class="option.length === 'Short' && 'active'">Short</button>
-          <button :class="option.length === 'Long' && 'active'">Long</button>
-          <button :class="option.length === 'All' && 'active'">All</button>
+          <button :class="option.length === 'Short' && 'active'" @click="option.length = 'Short'">Short</button>
+          <button :class="option.length === 'Long' && 'active'" @click="option.length = 'Long'">Long</button>
+          <button :class="option.length === 'All' && 'active'" @click="option.length = 'All'">All</button>
         </div>
       </div>
+      <button class="findButton" @click="showResult">Find button</button>
+    </div>
+    <div class="showNames" v-if="show">
+        <div v-for="(item, index) in computedSelectChracter()" :key="index">
+            <div>
+                name : {{ item.name }}
+            </div>
+            <div>
+                status : {{ item.status }}
+            </div>
+            <div>
+                gender : {{ item.gender }}
+            </div>
+            <img :src="item.image" alt="">
+        </div>
     </div>
   </div>
 </template>
 
 
 <style>
+
+.findButton{
+    background-color: rgb(249, 87, 89);
+    color: white;
+    border-radius: 6.2rem;
+    margin-top: 40px;
+    border: none;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
 .container {
   display: flex;
   padding: 40px;
